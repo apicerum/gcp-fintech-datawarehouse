@@ -47,7 +47,7 @@ jobs:
       # 7. Instalar dependencias e Ingestar Datos
       - name: Install Dependencies and Seed Raw Data
         run: |
-          pip install google-cloud-bigquery pandas faker
+          pip install google-cloud-bigquery pandas faker pyarrow db-dtypes
           python scripts/generate_fintech_data.py
 
       # 8. Ejecutar transformaciones dbt
