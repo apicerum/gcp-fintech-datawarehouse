@@ -5,11 +5,12 @@ with source as (
 renamed as (
     select
         cast(user_id as string) as user_id,
-        cast(full_name as string) as full_name,
+        cast(first_name as string) as first_name,
+        cast(last_name as string) as last_name,
+        concat(first_name, ' ', last_name) as full_name,
         cast(email as string) as user_email,
         cast(country as string) as country_code,
-        cast(signup_date as date) as signup_date,
-        cast(risk_category as string) as risk_category,
+        cast(created_at as timestamp) as user_created_at,
         cast(is_active as boolean) as is_user_active
     from source
 )
