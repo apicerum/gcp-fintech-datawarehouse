@@ -66,6 +66,7 @@ jobs:
                 method: service-account-json
                 project: $GCP_PROJECT_ID
                 dataset: fintech_staging_dev
+                location: us-central1
                 threads: 4
                 keyfile_json: ${{ secrets.GCP_SA_KEY }}
           EOF
