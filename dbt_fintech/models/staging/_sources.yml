@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: fintech_raw
+    database: gcp-fintech-datawarehouse
+    schema: fintech_raw_dev
+    tables:
+      - name: raw_users
+        description: "Tabla de registro de usuarios y perfil de riesgo"
+      - name: raw_plans
+        description: "Catálogo de planes de suscripción"
+      - name: raw_subscriptions
+        description: "Historial de suscripciones de clientes"
+      - name: raw_transactions
+        description: "Registro de cobros y transacciones bancarias"

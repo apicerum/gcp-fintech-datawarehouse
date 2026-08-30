@@ -49,3 +49,27 @@ jobs:
         run: |
           pip install google-cloud-bigquery pandas faker
           python scripts/generate_fintech_data.py
+
+      # 8. Ejecutar transformaciones dbt
+      - name: Set up dbt Profiles and Run
+        env:
+          GCP_PROJECT_ID: "gcp-fintech-datawarehouse"
+        run: |
+          pip install dbt-bigquery
+          mkdir -p ~/.dbt
+          cat <<EOF > ~/.dbt/profiles.yml
+          dbt_fintech_profile:
+            target: dev
+            outputs:
+              dev:
+                type: bigquery
+                method: service-account-json
+                project: $GCP_PROJECT_ID
+                dataset: fintech_staging_dev
+                threads: 4
+                keyfile_json: ${{ secrets.GCP_SA_KEY }}
+          EOF
+          cd dbt_fintech
+          dbt deps || true
+          dbt run --profiles-dir ~/.dbt
+          dbt test --profiles-dir ~/.dbt          
