@@ -1,0 +1,51 @@
+name: Deploy Infrastructure and Load Raw Data (DEV)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-dev:
+    name: Deploy Terraform and Seed BigQuery
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Autenticarse en GCP con las credenciales de GitHub Secrets
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. Configurar el SDK de Google Cloud
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # 4. Configurar Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.0
+
+      # 5. Ejecutar Terraform Init & Apply en el entorno DEV
+      - name: Terraform Init & Apply
+        run: |
+          cd terraform/environments/dev
+          terraform init
+          terraform apply -auto-approve
+
+      # 6. Configurar Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 7. Instalar dependencias e Ingestar Datos
+      - name: Install Dependencies and Seed Raw Data
+        run: |
+          pip install google-cloud-bigquery pandas faker
+          python scripts/generate_fintech_data.py
