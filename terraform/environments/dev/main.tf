@@ -6,6 +6,12 @@ terraform {
       version = "~> 5.0"
     }
   }
+  
+  # Guardar el estado en el bucket remoto
+  backend "gcs" {
+    bucket = "gcp-fintech-tfstate"
+    prefix = "terraform/state/dev"
+  }
 }
 
 provider "google" {
