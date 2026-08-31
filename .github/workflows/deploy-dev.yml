@@ -5,6 +5,16 @@ on:
     branches:
       - main
 
+# Permisos necesarios para escribir y desplegar en GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   deploy-dev:
     name: Deploy Terraform and Seed BigQuery
@@ -50,8 +60,8 @@ jobs:
           pip install google-cloud-bigquery pandas faker pyarrow db-dtypes
           python scripts/generate_fintech_data.py
 
-      # 8. Ejecutar transformaciones dbt
-      - name: Set up dbt Profiles and Run
+      # 8. Ejecutar transformaciones dbt, tests y generar documentación HTML
+      - name: Set up dbt, Run, Test and Generate Docs
         env:
           GCP_PROJECT_ID: "gcp-fintech-datawarehouse"
         run: |
@@ -73,4 +83,16 @@ jobs:
           cd dbt_fintech
           dbt deps || true
           dbt run --profiles-dir ~/.dbt
-          dbt test --profiles-dir ~/.dbt          
+          dbt test --profiles-dir ~/.dbt
+          dbt docs generate --profiles-dir ~/.dbt --target-path site
+
+      # 9. Empaquetar y subir artefacto para GitHub Pages
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dbt_fintech/site'
+
+      # 10. Publicar el sitio estático de dbt docs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
