@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: dim_users
+    description: "Dimensión de usuarios consolidada con métricas agregadas."
+    columns:
+      - name: user_id
+        description: "Clave primaria de la dimensión de usuarios."
+        tests:
+          - unique
+          - not_null
+      - name: user_email
+        tests:
+          - not_null
+
+  - name: fct_transactions
+    description: "Tabla de hechos de transacciones enriquecida."
+    columns:
+      - name: transaction_id
+        description: "Clave primaria de la tabla de hechos."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Clave foránea apuntando a la dimensión de usuarios."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_users')
+              field: user_id
+      - name: transaction_status
+        tests:
+          - accepted_values:
+              values: ['COMPLETED', 'PENDING', 'FAILED']

@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Vista limpia de usuarios de la plataforma."
+    columns:
+      - name: user_id
+        description: "Clave primaria del usuario."
+        tests:
+          - unique
+          - not_null
+      - name: user_email
+        tests:
+          - not_null
+
+  - name: stg_subscriptions
+    description: "Vista limpia de suscripciones de usuarios."
+    columns:
+      - name: subscription_id
+        description: "Clave primaria de la suscripción."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+
+  - name: stg_transactions
+    description: "Vista limpia de eventos transaccionales."
+    columns:
+      - name: transaction_id
+        description: "Clave primaria de la transacción."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: transaction_amount
+        tests:
+          - not_null
+      - name: transaction_status
+              tests:
+                - accepted_values:
+                    values: ['COMPLETED', 'PENDING', 'FAILED']          
