@@ -40,6 +40,6 @@ models:
         tests:
           - not_null
       - name: transaction_status
-              tests:
-                - accepted_values:
-                    values: ['COMPLETED', 'PENDING', 'FAILED']          
+        tests:
+          - accepted_values:
+              values: ['COMPLETED', 'PENDING', 'FAILED']          
