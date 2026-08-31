@@ -43,6 +43,8 @@ for _ in range(NUM_USERS):
     })
 
 df_users = pd.DataFrame(users_data)
+# Obtener únicamente los IDs de usuarios ACTIVOS
+active_user_ids = df_users[df_users['is_active'] == True]['user_id'].tolist()
 
 # ------------------------------------------------------------------
 # 2. Generar Transacciones (raw_transactions)
@@ -52,11 +54,11 @@ transactions_data = []
 tx_types = ["TRANSFER", "PAYMENT", "WITHDRAWAL", "DEPOSIT"]
 statuses = ["COMPLETED", "PENDING", "FAILED"]
 
-for _ in range(NUM_TRANSACTIONS):
+for _ in range(NUM_TRANSACTIONS): 
     tx_time = fake.date_time_between(start_date="-1y", end_date="now")
     transactions_data.append({
         "transaction_id": str(uuid.uuid4()),
-        "user_id": random.choice(user_ids),
+        "user_id": random.choice(active_user_ids),
         "amount": round(random.uniform(1.50, 2500.00), 2),
         "currency": "USD",
         "transaction_type": random.choice(tx_types),
@@ -77,7 +79,7 @@ for _ in range(NUM_SUBSCRIPTIONS):
     sub_start = fake.date_time_between(start_date="-1y", end_date="now")
     subscriptions_data.append({
         "subscription_id": str(uuid.uuid4()),
-        "user_id": random.choice(user_ids),
+        "user_id": random.choice(active_user_ids),
         "plan_type": random.choice(plans),
         "status": random.choice(["ACTIVE", "CANCELLED", "PAST_DUE"]),
         "start_date": sub_start.strftime("%Y-%m-%d %H:%M:%S")

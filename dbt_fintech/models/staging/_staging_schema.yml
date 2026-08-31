@@ -24,6 +24,10 @@ models:
       - name: user_id
         tests:
           - not_null
+      - name: subscription_status
+        tests:
+          - accepted_values:
+              values: ['ACTIVE', 'CANCELLED', 'PAST_DUE']
 
   - name: stg_transactions
     description: "Vista limpia de eventos transaccionales."

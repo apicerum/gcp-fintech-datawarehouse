@@ -4,7 +4,7 @@ with users as (
 ),
 
 transactions as (
-    select transaction_id, user_id, transaction_status 
+    select transaction_id, user_id 
     from {{ ref('stg_transactions') }} 
     where transaction_status = 'COMPLETED'
 )
