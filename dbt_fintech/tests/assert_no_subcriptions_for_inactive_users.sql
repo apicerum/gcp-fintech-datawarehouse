@@ -6,7 +6,7 @@ with users as (
 subscriptions as (
     select subscription_id, user_id 
     from {{ ref('stg_subscriptions') }} 
-    where subcription_status = 'ACTIVE'
+    where subscription_status = 'ACTIVE'
 )
 
 select
